@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500" role="img">
+<defs>
+<linearGradient id="bgfeasibility" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#143735"/><stop offset="1" stop-color="#0D2625"/></linearGradient>
+<radialGradient id="glfeasibility" cx="78%" cy="18%" r="62%">
+<stop offset="0" stop-color="#B08A52" stop-opacity=".26"/><stop offset="1" stop-color="#B08A52" stop-opacity="0"/></radialGradient>
+<pattern id="grfeasibility" width="40" height="40" patternUnits="userSpaceOnUse">
+<path d="M40 0H0v40" fill="none" stroke="#F4F1E9" stroke-opacity=".055" stroke-width="1"/></pattern>
+
+</defs>
+<rect width="800" height="500" fill="url(#bgfeasibility)"/>
+<rect width="800" height="500" fill="url(#grfeasibility)"/>
+<rect width="800" height="500" fill="url(#glfeasibility)"/><rect x="180" y="92" width="440" height="40" rx="20" fill="none" stroke="#F4F1E9" stroke-opacity="0.16" stroke-width="1.2"/><text x="400" y="118" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" letter-spacing="4" fill="#F4F1E9" fill-opacity="0.46">01</text><rect x="216" y="158" width="368" height="40" rx="20" fill="none" stroke="#F4F1E9" stroke-opacity="0.33" stroke-width="1.2"/><text x="400" y="184" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" letter-spacing="4" fill="#F4F1E9" fill-opacity="0.63">02</text><rect x="252" y="224" width="296" height="40" rx="20" fill="none" stroke="#F4F1E9" stroke-opacity="0.50" stroke-width="1.2"/><text x="400" y="250" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" letter-spacing="4" fill="#F4F1E9" fill-opacity="0.80">03</text><rect x="288" y="290" width="224" height="40" rx="20" fill="none" stroke="#F4F1E9" stroke-opacity="0.67" stroke-width="1.2"/><text x="400" y="316" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" letter-spacing="4" fill="#F4F1E9" fill-opacity="0.97">04</text><rect x="324" y="356" width="152" height="40" rx="20" fill="none" stroke="#C9A06A" stroke-opacity="0.84" stroke-width="2"/><text x="400" y="382" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" letter-spacing="4" fill="#C9A06A" fill-opacity="1.00">05</text>
+<path d="M400 428 l0 -16 m-8 8 l8 8 8 -8" stroke="#C9A06A" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+</svg>

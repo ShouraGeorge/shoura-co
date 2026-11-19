@@ -1,0 +1,60 @@
+# ---------------------------------------------------------------------------
+# shoura.co — build and deploy
+# Runs on every push to main: regenerates the 26 pages from src/, checks them,
+# and publishes to Cloudflare Pages. Nothing to do by hand.
+#
+# One-time setup — in the repo: Settings → Secrets and variables → Actions:
+#   CLOUDFLARE_API_TOKEN   (Cloudflare → My Profile → API Tokens →
+#                           template "Edit Cloudflare Workers", or a custom
+#                           token with the "Cloudflare Pages: Edit" permission)
+#   CLOUDFLARE_ACCOUNT_ID  (Cloudflare dashboard → right-hand sidebar)
+# ---------------------------------------------------------------------------
+name: Build and deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Extract content for the builder
+        run: |
+          node -e "
+          const fs=require('fs');
+          const code=fs.readFileSync('src/assets/content.js','utf8');
+          const out=new Function(code+'; return {PRODUCTS,SHOP_CATS,POSTS};')();
+          fs.writeFileSync('src/content.json', JSON.stringify(out,null,1));
+          console.log('posts',out.POSTS.length,'products',out.PRODUCTS.length);
+          "
+
+      - name: Build the site
+        run: python3 build.py
+
+      - name: Audit the build
+        run: python3 audit.py
+
+      - name: Fail if the audit found errors
+        run: |
+          python3 audit.py | grep -q "ERRORS: 0" || { echo "::error::audit reported errors"; exit 1; }
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=shoura-co

@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>استوديو المحتوى — shoura.co</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#173B3A;--deep:#0E2A29;--petrol:#245B55;--ivory:#F4F1E9;--brass:#B08A52;
+ --ink:#846229;--graphite:#252A2A;--soft:#FCFBF8;--muted:#545C59;--muted2:#6A716E;
+ --line:rgba(37,42,42,.14);--lined:rgba(244,241,233,.16);--red:#9C4A3F;--green:#2F6B52;
+ --ar:'IBM Plex Sans Arabic',system-ui,sans-serif;--sans:'Inter',system-ui,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--ar);background:var(--soft);color:var(--graphite);font-size:15px;line-height:1.6}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+
+/* ---- shell ---- */
+header{background:var(--deep);color:var(--ivory);padding:0 22px;position:sticky;top:0;z-index:50;
+ display:flex;align-items:center;gap:16px;height:62px;border-bottom:1px solid var(--lined)}
+header h1{font-size:1rem;font-weight:600;letter-spacing:.01em}
+header .dot{width:7px;height:7px;border-radius:50%;background:var(--brass)}
+header .sp{margin-inline-start:auto;display:flex;gap:9px;align-items:center}
+.btn{padding:9px 16px;border-radius:3px;font-size:.84rem;font-weight:500;
+ border:1px solid transparent;transition:all .18s;white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
+.btn-brass{background:var(--brass);color:#16110C}.btn-brass:hover{background:#c49b5e}
+.btn-ghost{border-color:var(--lined);color:var(--ivory)}.btn-ghost:hover{border-color:var(--brass);color:var(--brass)}
+.btn-dark{background:var(--teal);color:var(--ivory)}.btn-dark:hover{background:var(--petrol)}
+.btn-out{border-color:var(--line);color:var(--graphite)}.btn-out:hover{border-color:var(--teal);background:var(--teal);color:var(--ivory)}
+.btn-red{border:1px solid rgba(156,74,63,.4);color:var(--red)}.btn-red:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.btn-sm{padding:6px 12px;font-size:.78rem}
+
+.tabs{display:flex;gap:2px;background:var(--ivory);border-bottom:1px solid var(--line);padding:0 22px}
+.tab{padding:13px 20px;font-size:.88rem;color:var(--muted);border-bottom:2px solid transparent;transition:.18s}
+.tab.on{color:var(--teal);border-bottom-color:var(--brass);font-weight:500}
+.tab .n{background:var(--line);border-radius:10px;padding:1px 7px;font-size:.72rem;margin-inline-start:6px}
+
+.wrap{display:grid;grid-template-columns:300px 1fr;gap:0;min-height:calc(100vh - 62px - 46px)}
+.side{border-inline-end:1px solid var(--line);background:#fff;overflow-y:auto;max-height:calc(100vh - 108px);
+ position:sticky;top:108px}
+.side-head{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center}
+.side-head input{flex:1;padding:7px 10px;border:1px solid var(--line);border-radius:3px;font-size:.82rem}
+.item{padding:13px 16px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s}
+.item:hover{background:var(--ivory)}
+.item.on{background:var(--ivory);box-shadow:inset 3px 0 0 var(--brass)}
+html[dir="rtl"] .item.on{box-shadow:inset -3px 0 0 var(--brass)}
+.item h4{font-size:.88rem;font-weight:500;margin-bottom:3px}
+.item .meta{font-size:.74rem;color:var(--muted2)}
+.pane{padding:26px 30px 70px;max-width:980px}
+.empty{padding:70px 24px;text-align:center;color:var(--muted2);font-size:.9rem}
+
+/* ---- form ---- */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+fieldset{border:1px solid var(--line);border-radius:4px;padding:18px 18px 20px;margin-bottom:20px;background:#fff}
+legend{font-size:.74rem;letter-spacing:.06em;color:var(--ink);font-weight:600;padding:0 8px}
+.f{margin-bottom:14px}
+.f label{display:block;font-size:.76rem;color:var(--muted);margin-bottom:5px;font-weight:500}
+.f input,.f select,.f textarea{width:100%;padding:9px 11px;border:1px solid var(--line);
+ background:var(--soft);border-radius:3px;font-size:.88rem;transition:border-color .18s}
+.f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:var(--teal)}
+.f textarea{min-height:84px;resize:vertical;line-height:1.65}
+.f .hint{font-size:.72rem;color:var(--muted2);margin-top:4px}
+.f input[dir="ltr"]{direction:ltr;text-align:left}
+.row{display:flex;gap:8px;align-items:flex-start;margin-bottom:7px}
+.row input,.row textarea{flex:1}
+.row .btn{flex-shrink:0}
+.en{direction:ltr;text-align:left;font-family:var(--sans)}
+.bar{position:fixed;bottom:0;inset-inline-start:0;width:100%;background:var(--deep);color:var(--ivory);
+ padding:11px 22px;display:flex;gap:10px;align-items:center;z-index:60;font-size:.82rem;
+ border-top:1px solid var(--lined)}
+.bar .sp{margin-inline-start:auto;display:flex;gap:9px}
+.status{color:rgba(244,241,233,.6)}
+.status b{color:var(--brass);font-weight:500}
+
+/* ---- blocks editor ---- */
+.blk{border:1px solid var(--line);border-radius:4px;padding:11px;margin-bottom:9px;background:var(--soft)}
+.blk-top{display:flex;gap:7px;align-items:center;margin-bottom:8px}
+.blk-top select{width:auto;padding:4px 8px;font-size:.76rem;border:1px solid var(--line);
+ border-radius:3px;background:#fff}
+.blk-top .sp{margin-inline-start:auto;display:flex;gap:5px}
+.icbtn{width:26px;height:26px;border:1px solid var(--line);border-radius:3px;display:flex;
+ align-items:center;justify-content:center;font-size:.8rem;color:var(--muted);background:#fff;transition:.15s}
+.icbtn:hover{border-color:var(--teal);color:var(--teal)}
+.blk textarea{width:100%;border:1px solid var(--line);border-radius:3px;padding:8px 10px;
+ font-size:.86rem;min-height:62px;resize:vertical;background:#fff;line-height:1.7}
+
+/* ---- modal / toast ---- */
+.ov{position:fixed;inset:0;background:rgba(14,42,41,.6);display:none;align-items:center;
+ justify-content:center;z-index:80;padding:20px}
+.ov.on{display:flex}
+.card{background:var(--soft);border-radius:5px;max-width:700px;width:100%;padding:26px 28px;
+ max-height:86vh;overflow-y:auto}
+.card h3{font-size:1.1rem;margin-bottom:12px}
+.card p{font-size:.88rem;color:var(--muted);margin-bottom:14px}
+.card pre{background:#fff;border:1px solid var(--line);border-radius:3px;padding:12px;
+ font-size:.76rem;max-height:200px;overflow:auto;direction:ltr;text-align:left;white-space:pre-wrap}
+.toast{position:fixed;bottom:62px;inset-inline-start:22px;background:var(--teal);color:var(--ivory);
+ padding:11px 18px;border-radius:4px;font-size:.84rem;z-index:90;opacity:0;transform:translateY(8px);
+ transition:.25s;pointer-events:none}
+.toast.on{opacity:1;transform:none}
+.warn{background:#fff6ec;border:1px solid #e8c89b;color:#7a5520;padding:11px 14px;
+ border-radius:4px;font-size:.82rem;margin-bottom:16px}
+.err{color:var(--red);font-size:.78rem;margin-top:4px}
+@media(max-width:860px){
+ .wrap{grid-template-columns:1fr}
+ .side{position:static;max-height:none;border-inline-end:0;border-bottom:1px solid var(--line)}
+ .grid2{grid-template-columns:1fr}
+ .pane{padding:18px 16px 80px}
+ header{padding:0 14px}header h1{font-size:.9rem}
+ .bar{flex-wrap:wrap;gap:7px}
+}
+
+/* product image picker */
+.imgbox{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:start}
+.imgprev{aspect-ratio:4/3;border:1px dashed var(--line);border-radius:10px;overflow:hidden;
+  background:#f4f5f3;display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:10px;font-size:.76rem;color:var(--muted);line-height:1.6}
+.imgprev img{width:100%;height:100%;object-fit:cover;display:block}
+.imgact{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.imgact .hint{margin:0}
+@media(max-width:700px){.imgbox{grid-template-columns:1fr}}
+
+/* category manager */
+.catrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  padding:12px 0;border-bottom:1px solid var(--line)}
+.catrow:last-of-type{border-bottom:0}
+.catn{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:#eef0ed;color:var(--muted);
+  display:flex;align-items:center;justify-content:center;font-size:.74rem;font-weight:600}
+.catf{flex:1 1 300px;min-width:0;display:grid;gap:8px;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+.catf input{width:100%;min-width:0}
+.catb{flex:0 0 auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.catuse{font-size:.72rem;color:var(--muted);white-space:nowrap;margin-inline-end:4px}
+.btn[disabled]{opacity:.35;pointer-events:none}
+.pane{min-width:0}
+.pane fieldset{min-width:0}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="dot"></span>
+  <h1>استوديو المحتوى — shoura.co</h1>
+  <div class="sp">
+    <button class="btn btn-ghost btn-sm" id="btnLoad">تحميل ملف</button>
+    <button class="btn btn-brass btn-sm" id="btnExport">تصدير content.js</button>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab on" data-tab="products">المنتجات <span class="n" id="nProd">0</span></button>
+  <button class="tab" data-tab="posts">المقالات <span class="n" id="nPost">0</span></button>
+  <button class="tab" data-tab="cats">التصنيفات <span class="n" id="nCat">0</span></button>
+  <button class="tab" data-tab="help">كيف أستخدمه</button>
+</div>
+
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-head">
+      <input type="search" id="search" placeholder="بحث…">
+      <button class="btn btn-dark btn-sm" id="btnNew">+ جديد</button>
+    </div>
+    <div id="list"></div>
+  </aside>
+  <main class="pane" id="pane"><div class="empty">جارٍ التحميل…</div></main>
+</div>
+
+<div class="bar">
+  <span class="status" id="status">—</span>
+  <div class="sp">
+    <button class="btn btn-ghost btn-sm" id="btnReset">استعادة الأصل</button>
+    <button class="btn btn-brass btn-sm" id="btnExport2">تصدير content.js</button>
+  </div>
+</div>
+
+<div class="ov" id="ov"><div class="card" id="ovCard"></div></div>
+<div class="toast" id="toast"></div>
+<input type="file" id="file" accept=".js,.json" hidden>
+<input type="file" id="imgFile" accept="image/*" hidden>
+
+<script>
+(function(){
+"use strict";
+const $=(s,r)=>(r||document).querySelector(s), $$=(s,r)=>Array.from((r||document).querySelectorAll(s));
+const LS='shoura_studio_v1';
+let DATA={PRODUCTS:[],SHOP_CATS:[],POSTS:[]}, ORIGINAL=null, tab='products', sel=null, dirty=false;
+
+/* ---------------- loading ---------------- */
+function parseContent(code){
+  try{ return new Function(code+'\n;return {PRODUCTS,SHOP_CATS,POSTS};')(); }
+  catch(e){ throw new Error('الملف مش مقروء: '+e.message); }
+}
+async function boot(){
+  const saved=localStorage.getItem(LS);
+  try{
+    const res=await fetch('assets/content.js',{cache:'no-store'});
+    if(!res.ok) throw 0;
+    ORIGINAL=parseContent(await res.text());
+  }catch(e){ ORIGINAL=null; }
+  if(saved){
+    try{
+      const s=JSON.parse(saved);
+      DATA=s.data; dirty=true;
+      setStatus('استُعيد عمل غير مصدَّر من '+new Date(s.at).toLocaleString('ar-EG'));
+    }catch(e){}
+  }
+  if(!dirty){
+    if(ORIGINAL){ DATA=JSON.parse(JSON.stringify(ORIGINAL)); setStatus('تم تحميل المحتوى الحالي من الموقع'); }
+    else { renderNoFile(); return; }
+  }
+  render();
+}
+function renderNoFile(){
+  $('#pane').innerHTML='<div class="warn">مش لاقي <code>assets/content.js</code>. ده بيحصل لو فتحت الملف من جهازك مباشرة بدل ما يكون على الموقع.</div>'
+   +'<p style="color:var(--muted);font-size:.9rem;margin-bottom:14px">اضغط «تحميل ملف» فوق واختار <code>assets/content.js</code> من فولدر الموقع.</p>'
+   +'<button class="btn btn-dark" onclick="document.getElementById(\'file\').click()">اختيار الملف</button>';
+  $('#list').innerHTML='';
+}
+$('#btnLoad').onclick=()=>$('#file').click();
+$('#file').onchange=e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ DATA=parseContent(r.result); ORIGINAL=JSON.parse(JSON.stringify(DATA));
+    sel=null; save(); render(); toast('تم تحميل الملف'); }catch(err){ alert(err.message); } };
+  r.readAsText(f);
+};
+
+/* ---------------- state ---------------- */
+function save(){ try{ localStorage.setItem(LS,JSON.stringify({data:DATA,at:Date.now()})); }catch(e){}
+  dirty=true; setStatus('تعديلات غير مصدَّرة — محفوظة في المتصفح'); }
+function setStatus(t){ $('#status').innerHTML=t; }
+function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.add('on');
+  clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('on'),2200); }
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---------------- list ---------------- */
+function render(){
+  $('#nProd').textContent=DATA.PRODUCTS.length;
+  $('#nPost').textContent=DATA.POSTS.length;
+  $('#nCat').textContent=DATA.SHOP_CATS.filter(c=>c.id!=='all').length;
+  $$('.tab').forEach(t=>t.classList.toggle('on',t.dataset.tab===tab));
+  $('#side').style.display = (tab==='help'||tab==='cats') ? 'none' : '';
+  if(tab==='help'){ renderHelp(); return; }
+  if(tab==='cats'){ renderCats(); return; }
+  renderList(); renderForm();
+}
+function renderList(){
+  const q=($('#search').value||'').trim().toLowerCase();
+  const arr = tab==='products' ? DATA.PRODUCTS : DATA.POSTS;
+  const rows = arr.map((it,i)=>({it,i})).filter(({it})=>{
+    if(!q) return true;
+    const hay=[it.id,it.slug,it.ar&&it.ar.name,it.en&&it.en.name,it.ar&&it.ar.title,it.en&&it.en.title].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+  $('#list').innerHTML = rows.length ? rows.map(({it,i})=>{
+    const title = tab==='products' ? (it.ar.name||it.en.name) : (it.ar.title||it.en.title);
+    const meta  = tab==='products' ? (it.price? it.price.toLocaleString('en-US')+' ج.م' : 'السعر عند الطلب')+' · '+it.cat
+                                   : it.date+' · '+it.read+' د';
+    return `<div class="item ${sel===i?'on':''}" data-i="${i}">
+      <h4>${esc(title)}</h4><div class="meta">${esc(meta)}</div></div>`;
+  }).join('') : '<div class="empty">مفيش نتائج</div>';
+  $$('#list .item').forEach(el=>el.onclick=()=>{ sel=+el.dataset.i; render(); });
+}
+
+/* ---------------- forms ---------------- */
+function field(label,val,path,opts){
+  opts=opts||{};
+  const dir = opts.ltr ? ' class="en" dir="ltr"' : '';
+  const hint = opts.hint ? `<div class="hint">${esc(opts.hint)}</div>` : '';
+  if(opts.area) return `<div class="f"><label>${esc(label)}</label>
+    <textarea data-p="${path}"${dir} style="min-height:${opts.h||84}px">${esc(val)}</textarea>${hint}</div>`;
+  if(opts.select) return `<div class="f"><label>${esc(label)}</label>
+    <select data-p="${path}">${opts.select.map(o=>`<option value="${esc(o.v)}" ${o.v===val?'selected':''}>${esc(o.t)}</option>`).join('')}</select>${hint}</div>`;
+  return `<div class="f"><label>${esc(label)}</label>
+    <input data-p="${path}" value="${esc(val)}" type="${opts.type||'text'}"${dir}>${hint}</div>`;
+}
+function listEditor(label,arr,path,ltr){
+  return `<div class="f"><label>${esc(label)}</label>
+    <div data-list="${path}">${arr.map((v,i)=>`<div class="row">
+      <input value="${esc(v)}" data-li="${path}:${i}" ${ltr?'class="en" dir="ltr"':''}>
+      <button class="btn btn-red btn-sm" data-lrm="${path}:${i}">حذف</button></div>`).join('')}</div>
+    <button class="btn btn-out btn-sm" data-ladd="${path}" style="margin-top:4px">+ إضافة سطر</button></div>`;
+}
+function blocksEditor(label,blocks,path){
+  return `<div class="f"><label>${esc(label)}</label>
+  <div data-blocks="${path}">${blocks.map((b,i)=>{
+    const type = typeof b==='string' ? 'p' : (b.h!==undefined?'h':'list');
+    const val  = type==='p' ? b : (type==='h'? b.h : b.list.join('\n'));
+    return `<div class="blk">
+      <div class="blk-top">
+        <select data-btype="${path}:${i}">
+          <option value="p" ${type==='p'?'selected':''}>فقرة</option>
+          <option value="h" ${type==='h'?'selected':''}>عنوان فرعي</option>
+          <option value="list" ${type==='list'?'selected':''}>قائمة نقاط</option>
+        </select>
+        <span class="hint">${type==='list'?'كل سطر = نقطة':''}</span>
+        <div class="sp">
+          <button class="icbtn" data-bup="${path}:${i}" title="لأعلى">↑</button>
+          <button class="icbtn" data-bdn="${path}:${i}" title="لأسفل">↓</button>
+          <button class="icbtn" data-brm="${path}:${i}" title="حذف">✕</button>
+        </div>
+      </div>
+      <textarea data-bval="${path}:${i}" style="min-height:${type==='p'?82:type==='list'?80:40}px">${esc(val)}</textarea>
+    </div>`; }).join('')}</div>
+  <button class="btn btn-out btn-sm" data-badd="${path}">+ إضافة فقرة</button></div>`;
+}
+
+function renderForm(){
+  const arr = tab==='products' ? DATA.PRODUCTS : DATA.POSTS;
+  if(sel===null || !arr[sel]){
+    $('#pane').innerHTML='<div class="empty">اختار عنصر من القائمة، أو اضغط «+ جديد».</div>'; return;
+  }
+  const it=arr[sel];
+  $('#pane').innerHTML = tab==='products' ? productForm(it) : postForm(it);
+  wire();
+}
+function productForm(p){
+  const cats=DATA.SHOP_CATS.filter(c=>c.id!=='all').map(c=>({v:c.id,t:c.ar+' ('+c.en+')'}));
+  return `
+  <fieldset><legend>أساسي</legend>
+    <div class="grid2">
+      ${field('المعرّف (id)',p.id,'id',{ltr:true,hint:'حروف إنجليزي وشرطات فقط — لا تغيّره بعد النشر'})}
+      ${field('التصنيف',p.cat,'cat',{select:cats})}
+    </div>
+    ${field('السعر بالجنيه',p.price,'price',{type:'number',hint:'اكتب 0 لعرض «السعر عند الطلب» بدل الرقم'})}
+  </fieldset>
+  <fieldset><legend>صورة المنتج</legend>
+    <div class="imgbox">
+      <div class="imgprev" id="imgPrev">${p.img
+        ? `<img src="${esc(imgSrc(p.img))}" alt="">`
+        : '<span>مفيش صورة — الموقع هيعرض الرسم الجرافيكي الافتراضي</span>'}</div>
+      <div class="imgact">
+        <button class="btn btn-dark btn-sm" data-imgpick="1">${p.img?'تغيير الصورة':'رفع صورة'}</button>
+        ${p.img?'<button class="btn btn-red btn-sm" data-imgdel="1">حذف الصورة</button>':''}
+        <div class="hint">JPG أو PNG أو WebP. الاستوديو بيصغّرها لوحده لـ1200 بكسل ويحوّلها WebP عشان الموقع يفضل سريع.<br>أحسن نتيجة: صورة أفقية، المنتج في النص، خلفية بسيطة.</div>
+      </div>
+    </div>
+  </fieldset>
+  <div class="grid2">
+    <fieldset><legend>العربية</legend>
+      ${field('الاسم',p.ar.name,'ar.name')}
+      ${field('السطر التعريفي',p.ar.tag,'ar.tag',{hint:'كلمتين أو تلاتة فوق الاسم'})}
+      ${field('الوصف',p.ar.desc,'ar.desc',{area:true,h:150})}
+      ${listEditor('المواصفات',p.ar.specs,'ar.specs')}
+    </fieldset>
+    <fieldset><legend>English</legend>
+      ${field('Name',p.en.name,'en.name',{ltr:true})}
+      ${field('Tag line',p.en.tag,'en.tag',{ltr:true})}
+      ${field('Description',p.en.desc,'en.desc',{area:true,h:150,ltr:true})}
+      ${listEditor('Specs',p.en.specs,'en.specs',true)}
+    </fieldset>
+  </div>
+  <div style="display:flex;gap:9px;margin-top:6px">
+    <button class="btn btn-red" data-del="1">حذف المنتج</button>
+    <button class="btn btn-out" data-dup="1">نسخة منه</button>
+  </div>`;
+}
+function postForm(p){
+  const covers=[{v:'assets/covers/tenders.svg',t:'غلاف: المناقصات'},{v:'assets/covers/pricing.svg',t:'غلاف: التسعير'},
+    {v:'assets/covers/feasibility.svg',t:'غلاف: الجدوى'},{v:'assets/covers/brand.svg',t:'غلاف: العلامة'},
+    {v:'assets/covers/nfc.svg',t:'غلاف: NFC'}];
+  if(!covers.some(c=>c.v===p.img)) covers.unshift({v:p.img,t:p.img});
+  return `
+  <fieldset><legend>أساسي</legend>
+    <div class="grid2">
+      ${field('الرابط (slug)',p.slug,'slug',{ltr:true,hint:'يظهر في العنوان: /insights/<slug>.html — لا تغيّره بعد النشر'})}
+      ${field('التاريخ',p.date,'date',{type:'date'})}
+    </div>
+    <div class="grid2">
+      ${field('دقائق القراءة',p.read,'read',{type:'number'})}
+      ${field('صورة الغلاف',p.img,'img',{select:covers})}
+    </div>
+    <div class="grid2">
+      ${field('التصنيف (عربي)',p.topic.ar,'topic.ar')}
+      ${field('Topic (English)',p.topic.en,'topic.en',{ltr:true})}
+    </div>
+  </fieldset>
+  <fieldset><legend>العربية</legend>
+    ${field('العنوان',p.ar.title,'ar.title')}
+    ${field('المقدمة',p.ar.excerpt,'ar.excerpt',{area:true,h:70,hint:'سطرين — يظهروا في البحث وفي كارت المقال'})}
+    ${blocksEditor('المتن',p.ar.body,'ar.body')}
+  </fieldset>
+  <fieldset><legend>English</legend>
+    ${field('Title',p.en.title,'en.title',{ltr:true})}
+    ${field('Excerpt',p.en.excerpt,'en.excerpt',{area:true,h:70,ltr:true})}
+    ${blocksEditor('Body',p.en.body,'en.body')}
+  </fieldset>
+  <div style="display:flex;gap:9px;margin-top:6px">
+    <button class="btn btn-red" data-del="1">حذف المقال</button>
+    <button class="btn btn-out" data-dup="1">نسخة منه</button>
+  </div>`;
+}
+
+/* ---------------- binding ---------------- */
+function getObj(){ return (tab==='products'?DATA.PRODUCTS:DATA.POSTS)[sel]; }
+function setPath(obj,path,val){ const k=path.split('.'); let o=obj;
+  for(let i=0;i<k.length-1;i++) o=o[k[i]]; o[k[k.length-1]]=val; }
+function getPath(obj,path){ return path.split('.').reduce((o,k)=>o[k],obj); }
+
+function wire(){
+  const obj=getObj();
+  $$('[data-p]').forEach(el=>{
+    el.oninput=()=>{ let v=el.value;
+      if(el.type==='number') v = v===''?0:Number(v);
+      setPath(obj,el.dataset.p,v); save();
+      if(['id','slug','ar.name','en.name','ar.title','en.title','price','date','read','cat'].includes(el.dataset.p)) renderList();
+    };
+  });
+  $$('[data-li]').forEach(el=>{ el.oninput=()=>{
+    const [path,i]=el.dataset.li.split(':'); getPath(obj,path)[+i]=el.value; save(); }; });
+  $$('[data-lrm]').forEach(b=>{ b.onclick=()=>{
+    const [path,i]=b.dataset.lrm.split(':'); getPath(obj,path).splice(+i,1); save(); renderForm(); }; });
+  $$('[data-ladd]').forEach(b=>{ b.onclick=()=>{
+    getPath(obj,b.dataset.ladd).push(''); save(); renderForm(); }; });
+
+  $$('[data-bval]').forEach(el=>{ el.oninput=()=>{
+    const [path,i]=el.dataset.bval.split(':'); const arr=getPath(obj,path); const cur=arr[+i];
+    const type = typeof cur==='string' ? 'p' : (cur.h!==undefined?'h':'list');
+    arr[+i] = type==='p' ? el.value : type==='h' ? {h:el.value} : {list:el.value.split('\n').filter(x=>x.trim())};
+    save(); }; });
+  $$('[data-btype]').forEach(s=>{ s.onchange=()=>{
+    const [path,i]=s.dataset.btype.split(':'); const arr=getPath(obj,path); const cur=arr[+i];
+    const text = typeof cur==='string' ? cur : (cur.h!==undefined?cur.h:cur.list.join('\n'));
+    arr[+i] = s.value==='p' ? text : s.value==='h' ? {h:text} : {list:text.split('\n').filter(x=>x.trim())};
+    save(); renderForm(); }; });
+  $$('[data-bup]').forEach(b=>{ b.onclick=()=>{ const [path,i]=b.dataset.bup.split(':'); const a=getPath(obj,path);
+    const n=+i; if(n>0){ [a[n-1],a[n]]=[a[n],a[n-1]]; save(); renderForm(); } }; });
+  $$('[data-bdn]').forEach(b=>{ b.onclick=()=>{ const [path,i]=b.dataset.bdn.split(':'); const a=getPath(obj,path);
+    const n=+i; if(n<a.length-1){ [a[n+1],a[n]]=[a[n],a[n+1]]; save(); renderForm(); } }; });
+  $$('[data-brm]').forEach(b=>{ b.onclick=()=>{ const [path,i]=b.dataset.brm.split(':');
+    getPath(obj,path).splice(+i,1); save(); renderForm(); }; });
+  $$('[data-badd]').forEach(b=>{ b.onclick=()=>{ getPath(obj,b.dataset.badd).push(''); save(); renderForm(); }; });
+
+  const del=$('[data-del]'); if(del) del.onclick=()=>{
+    const what = tab==='products'?'المنتج':'المقال';
+    if(!confirm('متأكد من حذف '+what+'؟ الحذف مش بيرجع إلا بـ«استعادة الأصل».')) return;
+    (tab==='products'?DATA.PRODUCTS:DATA.POSTS).splice(sel,1); sel=null; save(); render(); toast('اتحذف'); };
+  const dup=$('[data-dup]'); if(dup) dup.onclick=()=>{
+    const copy=JSON.parse(JSON.stringify(getObj()));
+    if(tab==='products'){ copy.id=uniq(copy.id,DATA.PRODUCTS.map(x=>x.id)); copy.ar.name+=' (نسخة)'; copy.en.name+=' (copy)'; DATA.PRODUCTS.splice(sel+1,0,copy); }
+    else { copy.slug=uniq(copy.slug,DATA.POSTS.map(x=>x.slug)); copy.ar.title+=' (نسخة)'; copy.en.title+=' (copy)'; DATA.POSTS.splice(sel+1,0,copy); }
+    sel=sel+1; save(); render(); toast('اتعملت نسخة'); };
+
+  const pick=$('[data-imgpick]'); if(pick) pick.onclick=()=>{
+    const f=$('#imgFile'); f.value=''; f.onchange=async ev=>{
+      const file=ev.target.files[0]; if(!file) return;
+      try{ await attachImage(getObj(), file); save(); renderForm(); toast('الصورة اتضافت'); }
+      catch(err){ alert('مقدرتش أقرا الصورة: '+err.message); }
+    }; f.click(); };
+  const idel=$('[data-imgdel]'); if(idel) idel.onclick=async ()=>{
+    const o=getObj(); if(!confirm('أحذف صورة المنتج؟ الموقع هيرجع يعرض الرسم الافتراضي.')) return;
+    await dropImage(o.img); o.img=null; save(); renderForm(); toast('الصورة اتحذفت'); };
+}
+function uniq(base,taken){ let i=2,v=base+'-'+i; while(taken.includes(v)){ i++; v=base+'-'+i; } return v; }
+
+/* ---------------- new ---------------- */
+$('#btnNew').onclick=()=>{
+  if(tab==='products'){
+    DATA.PRODUCTS.push({id:uniq('new-product',DATA.PRODUCTS.map(p=>p.id)),cat:(DATA.SHOP_CATS[1]||{id:'cards'}).id,price:0,
+      en:{name:'New product',tag:'',desc:'',specs:['']},
+      ar:{name:'منتج جديد',tag:'',desc:'',specs:['']}});
+    sel=DATA.PRODUCTS.length-1;
+  } else {
+    const today=new Date().toISOString().slice(0,10);
+    DATA.POSTS.unshift({slug:uniq('new-article',DATA.POSTS.map(p=>p.slug)),date:today,read:5,
+      topic:{en:'Business Development',ar:'تطوير الأعمال'},img:'assets/covers/tenders.svg',
+      en:{title:'New article',excerpt:'',body:['']},
+      ar:{title:'مقال جديد',excerpt:'',body:['']}});
+    sel=0;
+  }
+  save(); render(); toast('اتضاف — املا البيانات');
+};
+$('#search').oninput=renderList;
+$$('.tab').forEach(t=>t.onclick=()=>{ tab=t.dataset.tab; sel=null; render(); });
+$('#btnReset').onclick=()=>{
+  if(!ORIGINAL) return alert('مفيش نسخة أصلية محمّلة.');
+  if(!confirm('هيرجّع كل حاجة لآخر ملف اتحمّل، وكل التعديلات غير المصدَّرة هتروح. متأكد؟')) return;
+  DATA=JSON.parse(JSON.stringify(ORIGINAL)); sel=null;
+  localStorage.removeItem(LS); dirty=false; setStatus('تم الرجوع للأصل'); render();
+};
+
+/* ---------------- validate + export ---------------- */
+function validate(){
+  const e=[];
+  const pid=DATA.PRODUCTS.map(p=>p.id);
+  pid.forEach((id,i)=>{ if(!/^[a-z0-9-]+$/.test(id)) e.push(`منتج #${i+1}: المعرّف «${id}» لازم يكون حروف إنجليزي صغيرة وأرقام وشرطات`);
+    if(pid.indexOf(id)!==i) e.push(`معرّف منتج مكرر: ${id}`); });
+  DATA.PRODUCTS.forEach((p,i)=>{ if(!p.ar.name||!p.en.name) e.push(`منتج #${i+1}: الاسم ناقص بإحدى اللغتين`);
+    if(!p.ar.desc||!p.en.desc) e.push(`منتج «${p.ar.name||p.id}»: الوصف ناقص`); });
+  DATA.PRODUCTS.forEach(p=>{ if(p.img && !/^assets\/products\/[a-z0-9._-]+$/.test(p.img))
+    e.push(`منتج «${p.ar.name||p.id}»: مسار الصورة غير صالح`); });
+  const sl=DATA.POSTS.map(p=>p.slug);
+  sl.forEach((s,i)=>{ if(!/^[a-z0-9-]+$/.test(s)) e.push(`مقال #${i+1}: الرابط «${s}» لازم يكون حروف إنجليزي صغيرة وأرقام وشرطات`);
+    if(sl.indexOf(s)!==i) e.push(`رابط مقال مكرر: ${s}`); });
+  DATA.POSTS.forEach((p,i)=>{ if(!p.ar.title||!p.en.title) e.push(`مقال #${i+1}: العنوان ناقص بإحدى اللغتين`);
+    if(!p.ar.excerpt||!p.en.excerpt) e.push(`مقال «${p.ar.title||p.slug}»: المقدمة ناقصة`);
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(p.date)) e.push(`مقال «${p.ar.title||p.slug}»: التاريخ غير صحيح`);
+    ['ar','en'].forEach(L=>{ p[L].body=p[L].body.filter(b=> typeof b==='string' ? b.trim() : (b.h? b.h.trim() : b.list.length)); });
+    if(!p.ar.body.length||!p.en.body.length) e.push(`مقال «${p.ar.title||p.slug}»: المتن فاضي بإحدى اللغتين`); });
+  return e;
+}
+function serialize(){
+  const j=o=>JSON.stringify(o,null,2);
+  return `/* =======================================================================
+   shoura.co — content file
+   صُدِّر من استوديو المحتوى في ${new Date().toISOString().slice(0,16).replace('T',' ')}
+   المنتجات والمقالات. عدّل من الاستوديو، مش من هنا، عشان ما يحصلش أخطاء.
+   ======================================================================= */
+
+const PRODUCTS = ${j(DATA.PRODUCTS)};
+
+const SHOP_CATS = ${j(DATA.SHOP_CATS)};
+
+const POSTS = ${j(DATA.POSTS)};
+`;
+}
+async function doExport(){
+  const errs=validate();
+  if(errs.length){
+    $('#ovCard').innerHTML=`<h3>فيه حاجات ناقصة</h3>
+      <p>صلّحها الأول عشان الموقع ما يبوظش:</p>
+      <ul style="font-size:.86rem;color:var(--red);padding-inline-start:20px;line-height:2">
+        ${errs.slice(0,14).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button class="btn btn-out" onclick="document.getElementById('ov').classList.remove('on')">تمام</button>
+      </div>`;
+    $('#ov').classList.add('on'); return;
+  }
+  const code=serialize();
+  const imgs=await pendingImages();
+  let fname='content.js', blob;
+  if(imgs.length){
+    const files=[{name:'src/assets/content.js',data:new TextEncoder().encode(code)}];
+    for(const im of imgs) files.push({name:im.name,data:new Uint8Array(await im.blob.arrayBuffer())});
+    blob=makeZip(files); fname='shoura-content.zip';
+  } else {
+    blob=new Blob([code],{type:'text/javascript'});
+  }
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=fname;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  $('#ovCard').innerHTML=`<h3>تم التصدير ✓</h3>
+    ${imgs.length?`<p>نزّل <code>${fname}</code> — جواه ملف المحتوى و<b>${imgs.length} صورة منتج</b> بامتداد WebP، مرتّبين بنفس شكل المستودع.</p>`
+                 :'<p>نزّل ملف <code>content.js</code>. دلوقتي عندك طريقتين توصّله للموقع:</p>'}
+    <p style="color:var(--graphite)"><b>١ — لو GitHub مربوط:</b> ارفع الملف مكان <code>src/assets/content.js</code> في المستودع. الموقع هيتبني وينشر لوحده خلال دقيقتين.</p>
+    <p style="color:var(--graphite)"><b>٢ — من غير GitHub:</b> ابعت الملف في الشات وأنا أعيد بناء الموقع وأبعتهولك.</p>
+    <div class="warn" style="margin:14px 0">مهم: تغيير المنتجات والمقالات محتاج <b>إعادة بناء</b> للموقع، مش بس رفع الملف في <code>assets/</code> — لأن صفحات المقالات والمتجر مبنية مسبقًا عشان جوجل يقراها.</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-dark" id="copyCode">نسخ محتوى الملف</button>
+      <button class="btn btn-out" onclick="document.getElementById('ov').classList.remove('on')">إغلاق</button>
+    </div>`;
+  $('#ov').classList.add('on');
+  $('#copyCode').onclick=function(){ const b=this;
+    navigator.clipboard.writeText(code).then(()=>b.textContent='اتنسخ ✓',()=>b.textContent='النسخ مش شغال هنا'); };
+  dirty=false; setStatus('آخر تصدير: <b>'+new Date().toLocaleTimeString('ar-EG')+'</b>');
+}
+$('#btnExport').onclick=doExport; $('#btnExport2').onclick=doExport;
+$('#ov').onclick=e=>{ if(e.target.id==='ov') $('#ov').classList.remove('on'); };
+window.addEventListener('beforeunload',e=>{ if(dirty){ e.preventDefault(); e.returnValue=''; } });
+
+/* ---------------- images: resize in the browser, keep as WebP ---------------- */
+/* Pending uploads live in IndexedDB so a draft survives closing the tab.
+   Each file is named <product-id>-<stamp>.webp so replacing one never
+   collides with a copy already cached by the browser or the CDN.          */
+let IDB=null;
+function idb(){ return IDB || (IDB=new Promise((res,rej)=>{
+  const r=indexedDB.open('shoura_studio_img',1);
+  r.onupgradeneeded=()=>{ r.result.createObjectStore('img'); };
+  r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error||new Error('IndexedDB'));
+})); }
+function idbOp(mode,fn){ return idb().then(db=>new Promise((res,rej)=>{
+  const t=db.transaction('img',mode), st=t.objectStore('img'); let out;
+  try{ out=fn(st); }catch(e){ rej(e); return; }
+  t.oncomplete=()=>res(out&&out.result!==undefined?out.result:out);
+  t.onerror=()=>rej(t.error);
+})); }
+const idbPut =(k,v)=>idbOp('readwrite',st=>st.put(v,k));
+const idbGet =(k)  =>idbOp('readonly', st=>st.get(k));
+const idbDel =(k)  =>idbOp('readwrite',st=>st.delete(k));
+const idbKeys=()   =>idbOp('readonly', st=>st.getAllKeys());
+
+const PREVIEW={};                       /* path -> object URL, for this page only */
+function imgSrc(path){ return PREVIEW[path] || path; }
+
+const MAXW=1200, MAXH=900;
+function attachImage(prod, file){
+  if(!/^image\//.test(file.type)) return Promise.reject(new Error('الملف ده مش صورة'));
+  return new Promise((res,rej)=>{
+    const url=URL.createObjectURL(file), im=new Image();
+    im.onload=()=>{
+      let w=im.naturalWidth, h=im.naturalHeight;
+      const k=Math.min(1, MAXW/w, MAXH/h);
+      w=Math.max(1,Math.round(w*k)); h=Math.max(1,Math.round(h*k));
+      const c=document.createElement('canvas'); c.width=w; c.height=h;
+      const g=c.getContext('2d'); g.imageSmoothingQuality='high'; g.drawImage(im,0,0,w,h);
+      URL.revokeObjectURL(url);
+      c.toBlob(async blob=>{
+        if(!blob){ rej(new Error('التحويل فشل')); return; }
+        const old=prod.img;
+        const name='assets/products/'+prod.id+'-'+Date.now().toString(36)+'.webp';
+        try{
+          await idbPut(name, blob);
+          if(PREVIEW[name]) URL.revokeObjectURL(PREVIEW[name]);
+          PREVIEW[name]=URL.createObjectURL(blob);
+          prod.img=name;
+          if(old && old!==name) await dropImage(old);
+          res(name);
+        }catch(e){ rej(e); }
+      },'image/webp',0.82);
+    };
+    im.onerror=()=>{ URL.revokeObjectURL(url); rej(new Error('مقدرتش أفتح الصورة')); };
+    im.src=url;
+  });
+}
+async function dropImage(path){
+  if(!path) return;
+  try{ await idbDel(path); }catch(e){}
+  if(PREVIEW[path]){ URL.revokeObjectURL(PREVIEW[path]); delete PREVIEW[path]; }
+}
+async function loadPreviews(){
+  let keys=[]; try{ keys=await idbKeys(); }catch(e){ return; }
+  for(const k of keys){
+    const used=DATA.PRODUCTS.some(p=>p.img===k);
+    if(!used){ try{ await idbDel(k); }catch(e){} continue; }   /* orphan from an undone edit */
+    try{ const b=await idbGet(k); if(b) PREVIEW[k]=URL.createObjectURL(b); }catch(e){}
+  }
+}
+async function pendingImages(){
+  const out=[];
+  for(const p of DATA.PRODUCTS){
+    if(!p.img) continue;
+    try{ const b=await idbGet(p.img); if(b) out.push({name:'src/'+p.img, blob:b}); }catch(e){}
+  }
+  return out;
+}
+
+/* ---------------- zip (stored, no compression — images are compressed already) ---------------- */
+const CRCT=(function(){ const t=new Uint32Array(256);
+  for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c = c&1 ? 0xEDB88320^(c>>>1) : c>>>1; t[n]=c>>>0; }
+  return t; })();
+function crc32(u8){ let c=0xFFFFFFFF;
+  for(let i=0;i<u8.length;i++) c=CRCT[(c^u8[i])&0xFF]^(c>>>8);
+  return (c^0xFFFFFFFF)>>>0; }
+function makeZip(files){
+  const enc=new TextEncoder(), local=[], central=[]; let off=0;
+  const d=new Date();
+  const dosT=(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1);
+  const dosD=((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate();
+  files.forEach(f=>{
+    const nm=enc.encode(f.name), crc=crc32(f.data), sz=f.data.length;
+    const L=new DataView(new ArrayBuffer(30));
+    L.setUint32(0,0x04034b50,true); L.setUint16(4,20,true); L.setUint16(6,0x0800,true);
+    L.setUint16(10,dosT,true); L.setUint16(12,dosD,true);
+    L.setUint32(14,crc,true); L.setUint32(18,sz,true); L.setUint32(22,sz,true);
+    L.setUint16(26,nm.length,true);
+    local.push(new Uint8Array(L.buffer),nm,f.data);
+    const C=new DataView(new ArrayBuffer(46));
+    C.setUint32(0,0x02014b50,true); C.setUint16(4,20,true); C.setUint16(6,20,true);
+    C.setUint16(8,0x0800,true);
+    C.setUint16(12,dosT,true); C.setUint16(14,dosD,true);
+    C.setUint32(16,crc,true);
+    C.setUint32(20,sz,true); C.setUint32(24,sz,true);
+    C.setUint16(28,nm.length,true); C.setUint32(42,off,true);
+    central.push(new Uint8Array(C.buffer),nm);
+    off += 30+nm.length+sz;
+  });
+  const csize=central.reduce((a,b)=>a+b.length,0);
+  const E=new DataView(new ArrayBuffer(22));
+  E.setUint32(0,0x06054b50,true); E.setUint16(8,files.length,true); E.setUint16(10,files.length,true);
+  E.setUint32(12,csize,true); E.setUint32(16,off,true);
+  return new Blob(local.concat(central,[new Uint8Array(E.buffer)]),{type:'application/zip'});
+}
+
+/* ---------------- categories ---------------- */
+function catUse(id){ return DATA.PRODUCTS.filter(p=>p.cat===id).length; }
+function renderCats(){
+  const cats=DATA.SHOP_CATS.filter(c=>c.id!=='all');
+  $('#list').innerHTML='';
+  $('#pane').innerHTML=`
+  <h2 style="font-size:1.3rem;margin-bottom:4px">تصنيفات المتجر</h2>
+  <p style="color:var(--muted);margin-bottom:18px;font-size:.92rem">دي الأزرار اللي بتظهر فوق المنتجات في صفحة المتجر. الترتيب هنا هو الترتيب في الموقع. زرار «كل المنتجات» ثابت وبيتحط تلقائي في الأول.</p>
+  <fieldset><legend>التصنيفات (${cats.length})</legend>
+    ${cats.length ? cats.map((c,i)=>`
+    <div class="catrow">
+      <div class="catn">${i+1}</div>
+      <div class="catf">
+        <input data-cf="${i}:ar" value="${esc(c.ar)}" placeholder="الاسم بالعربي">
+        <input data-cf="${i}:en" value="${esc(c.en)}" class="en" dir="ltr" placeholder="English name">
+        <input data-cf="${i}:id" value="${esc(c.id)}" class="en" dir="ltr" placeholder="id">
+      </div>
+      <div class="catb">
+        <span class="catuse">${catUse(c.id)} منتج</span>
+        <button class="btn btn-out btn-sm" data-cup="${i}" ${i===0?'disabled':''}>▲</button>
+        <button class="btn btn-out btn-sm" data-cdn="${i}" ${i===cats.length-1?'disabled':''}>▼</button>
+        <button class="btn btn-red btn-sm" data-crm="${i}">حذف</button>
+      </div>
+    </div>`).join('') : '<div class="empty">مفيش تصنيفات. اضغط «+ تصنيف جديد».</div>'}
+    <button class="btn btn-dark btn-sm" id="catAdd" style="margin-top:10px">+ تصنيف جديد</button>
+  </fieldset>
+  <fieldset><legend>حاجات تاخد بالك منها</legend>
+    <ul style="padding-inline-start:20px;line-height:2;font-size:.9rem;color:var(--muted)">
+      <li><b>الـid</b> هو اللي بيربط التصنيف بالمنتجات. لو غيّرته، الاستوديو بينقل كل منتجات التصنيف معاه تلقائي.</li>
+      <li>مش هينفع تحذف تصنيف فيه منتجات — انقل منتجاته الأول من تبويب المنتجات.</li>
+      <li>التصنيف اللي مفيهوش أي منتج <b>مش بيظهر</b> في الموقع أصلاً، فمفيش زرار فاضي.</li>
+    </ul>
+  </fieldset>`;
+  wireCats();
+}
+function wireCats(){
+  const cats=DATA.SHOP_CATS.filter(c=>c.id!=='all');
+  const at=i=>DATA.SHOP_CATS.indexOf(cats[i]);
+  $$('[data-cf]').forEach(el=>{ el.onchange=()=>{
+    const [i,k]=el.dataset.cf.split(':'); const c=cats[+i];
+    let v=el.value.trim();
+    if(k==='id'){
+      v=v.toLowerCase().replace(/[^a-z0-9-]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+      if(!v){ toast('الـid مينفعش يبقى فاضي'); renderCats(); return; }
+      if(v==='all'||DATA.SHOP_CATS.some(x=>x!==c&&x.id===v)){ toast('الـid ده مستخدم'); renderCats(); return; }
+      const old=c.id; DATA.PRODUCTS.forEach(p=>{ if(p.cat===old) p.cat=v; });
+      c.id=v;
+    } else { if(!v){ toast('الاسم مينفعش يبقى فاضي'); renderCats(); return; } c[k]=v; }
+    save(); renderCats(); }; });
+  $$('[data-cup]').forEach(b=>{ b.onclick=()=>{ const i=+b.dataset.cup, a=at(i), bI=at(i-1);
+    [DATA.SHOP_CATS[a],DATA.SHOP_CATS[bI]]=[DATA.SHOP_CATS[bI],DATA.SHOP_CATS[a]]; save(); renderCats(); }; });
+  $$('[data-cdn]').forEach(b=>{ b.onclick=()=>{ const i=+b.dataset.cdn, a=at(i), bI=at(i+1);
+    [DATA.SHOP_CATS[a],DATA.SHOP_CATS[bI]]=[DATA.SHOP_CATS[bI],DATA.SHOP_CATS[a]]; save(); renderCats(); }; });
+  $$('[data-crm]').forEach(b=>{ b.onclick=()=>{ const i=+b.dataset.crm, c=cats[i], n=catUse(c.id);
+    if(n){ alert('«'+c.ar+'» فيه '+n+' منتج. انقلهم لتصنيف تاني الأول من تبويب المنتجات، وبعدين احذفه.'); return; }
+    if(!confirm('أحذف تصنيف «'+c.ar+'»؟')) return;
+    DATA.SHOP_CATS.splice(at(i),1); save(); render(); toast('اتحذف'); }; });
+  $('#catAdd').onclick=()=>{
+    const taken=DATA.SHOP_CATS.map(c=>c.id);
+    let id='category', i=2; while(taken.includes(id)){ id='category-'+i; i++; }
+    DATA.SHOP_CATS.push({id,ar:'تصنيف جديد',en:'New category'});
+    save(); render(); toast('اتضاف — غيّر الاسم والـid'); };
+}
+
+/* ---------------- help ---------------- */
+function renderHelp(){
+  $('#pane').innerHTML=`
+  <h2 style="font-size:1.3rem;margin-bottom:6px">كيف أستخدم الاستوديو</h2>
+  <p style="color:var(--muted);margin-bottom:22px">الاستوديو بيعدّل المحتوى بس — المنتجات والمقالات. التصميم والصفحات مش بيتغيروا من هنا.</p>
+
+  <fieldset><legend>الخطوات</legend>
+    <ol style="padding-inline-start:20px;line-height:2.1;font-size:.92rem">
+      <li>افتح تبويب <b>المنتجات</b> أو <b>المقالات</b> أو <b>التصنيفات</b>.</li>
+      <li>اضغط <b>+ جديد</b>، أو اختار عنصر موجود من القائمة.</li>
+      <li>املا الحقول <b>بالعربي والإنجليزي</b> — الاتنين مطلوبين، الموقع بلغتين.</li>
+      <li>للمنتجات: حدّد <b>السعر</b> و<b>التصنيف</b>، وارفع <b>صورة</b> لو عندك.</li>
+      <li>اضغط <b>تصدير</b>.</li>
+      <li>ابعت الملف لي في الشات، أو ارفعه على GitHub لو مربوط.</li>
+    </ol>
+  </fieldset>
+
+  <fieldset><legend>حاجات مهمة</legend>
+    <ul style="padding-inline-start:20px;line-height:2.1;font-size:.92rem">
+      <li><b>الشغل بيتحفظ تلقائي في المتصفح</b> وانت بتكتب. لو قفلت الصفحة هتلاقيه لما ترجع — بس على نفس الجهاز ونفس المتصفح.</li>
+      <li><b>المعرّف (id) والرابط (slug)</b> — ما تغيّرهمش بعد ما المنتج أو المقال ينشر. تغييرهم بيكسر اللينكات ويضيّع ترتيب جوجل.</li>
+      <li><b>المقدمة (excerpt)</b> هي اللي بتظهر في نتائج بحث جوجل. خليها سطرين واضحين.</li>
+      <li><b>أغلفة المقالات</b> حالياً خمس أغلفة جرافيك جاهزة. لو عايز غلاف جديد قولي.</li>
+      <li><b>الصور بتتحفظ في المتصفح لحد التصدير.</b> أول ما ترفع صورة واحدة على الأقل، التصدير بينزّل ملف <code>.zip</code> بدل <code>content.js</code> — جواه المحتوى والصور مرتّبين بنفس شكل المستودع.</li>
+      <li><b>السعر 0</b> معناه «السعر عند الطلب» — الموقع هيكتبها بالعربي والإنجليزي بدل الرقم. استخدمها لحد ما تحدّد أسعارك.</li>
+      <li>الحذف مش بيرجع إلا بزرار <b>استعادة الأصل</b>، واللي بيرجّع كل حاجة لآخر ملف اتحمّل.</li>
+    </ul>
+  </fieldset>
+
+  <fieldset><legend>الصور</legend>
+    <ul style="padding-inline-start:20px;line-height:2.1;font-size:.92rem">
+      <li>ارفع أي صورة عادية — الاستوديو بيصغّرها لـ1200 بكسل ويحوّلها <b>WebP</b> لوحده. مش محتاج تجهّزها قبل كده.</li>
+      <li>الموقع بيعرض الصورة في إطار <b>أفقي 4:3</b> ويقصّها من النص. فصوّر المنتج في نص الكادر.</li>
+      <li>المنتج اللي مفيهوش صورة بيظهر برسم جرافيكي متولّد — مش بيبان فاضي ولا مكسور.</li>
+      <li>كل صورة بتاخد اسم فيه ختم وقت، عشان لما تغيّرها المتصفحات تشوف الجديدة فوراً مش القديمة المحفوظة.</li>
+    </ul>
+  </fieldset>
+
+  <fieldset><legend>التصنيفات</legend>
+    <ul style="padding-inline-start:20px;line-height:2.1;font-size:.92rem">
+      <li>التصنيف له <b>اسمين</b> (عربي وإنجليزي) و<b>id</b> إنجليزي هو اللي بيربطه بالمنتجات.</li>
+      <li>لو غيّرت الـid، الاستوديو بينقل منتجاته معاه تلقائي — مفيش منتج بيضيع.</li>
+      <li>الترتيب في الصفحة هو ترتيب الأزرار في المتجر. حرّكه بـ▲ و▼.</li>
+      <li>التصنيف الفاضي مش بيظهر في الموقع، فمتقلقش من تصنيف لسه مجهّزه.</li>
+    </ul>
+  </fieldset>
+
+  <fieldset><legend>ليه محتاج إعادة بناء؟</legend>
+    <p style="font-size:.92rem;line-height:1.9;color:var(--muted)">صفحات المقالات والمتجر <b>مبنية مسبقًا كملفات HTML</b> — ده اللي بيخلي جوجل يفهرس كل مقال لوحده ويظهر في البحث. لو كان الموقع بيقرا المحتوى من JavaScript وقت التصفح، جوجل مكانش هيشوف المقالات أصلاً.
+    يعني بعد ما تصدّر الملف، لازم خطوة إعادة بناء تحوّل المحتوى الجديد لصفحات. ده بيحصل تلقائي لو GitHub مربوط، أو يدوي لو مش مربوط.</p>
+  </fieldset>`;
+  $('#list').innerHTML='';
+}
+
+boot().then(loadPreviews).catch(()=>{});
+})();
+</script>
+</body>
+</html>
