@@ -65,12 +65,12 @@ META = {
  "home": {
    "en": ("Shoura George — Business Development, Connected to Real Execution",
           "Business development, market research, branding, digital systems and project leadership for companies in Egypt and the Gulf. Strategy that gets delivered."),
-   "ar": ("شُورى جورج — تطوير أعمال موصول بتنفيذ حقيقي",
+   "ar": ("شوره جورج — تطوير أعمال موصول بتنفيذ حقيقي",
           "تطوير أعمال وأبحاث سوق وعلامات تجارية وأنظمة رقمية وقيادة مشروعات وحلول NFC للشركات في مصر والخليج. استراتيجية تصل إلى التنفيذ.")},
  "about": {
    "en": ("About Shoura George — Business Development Professional in Cairo",
           "Business development professional in Cairo. Background across food science, advertising, operations, hospitality, tourism and consulting. Track record from 2016."),
-   "ar": ("نبذة عن شُورى جورج — متخصص تطوير أعمال في القاهرة",
+   "ar": ("نبذة عن شوره جورج — متخصص تطوير أعمال في القاهرة",
           "متخصص تطوير أعمال بخلفية تمتد من علوم الأغذية والإعلان والتشغيل والضيافة والسياحة إلى الاستشارات الإدارية. المسار المهني من 2016 حتى الآن.")},
  "services": {
    "en": ("Services — Business Development, Research and Project Leadership",
@@ -85,7 +85,7 @@ META = {
  "work": {
    "en": ("Selected Work — Projects and Ventures | Shoura George",
           "Eight projects with the role stated honestly: BLI brand and website work, Health Global, Egyptian Pharaonic Cave, Tareek Limousine, Blue Burger and more."),
-   "ar": ("أعمال مختارة — مشاريع وعلامات ومشروعات | شُورى جورج",
+   "ar": ("أعمال مختارة — مشاريع وعلامات ومشروعات | شوره جورج",
           "ثمانية مشاريع بتوضيح الدور بصدق: تحديث هوية وموقع BLI، وHealth Global، والكهف الفرعوني المصري، وطريق ليموزين، وBlue Burger وغيرها.")},
  "insights": {
    "en": ("Insights — Notes on Proposals, Pricing, Feasibility and Brand",
@@ -100,7 +100,7 @@ META = {
  "contact": {
    "en": ("Contact Shoura George — Business Development, Cairo, Egypt",
           "Describe what your business is working on. A short call, then a written scope with costs before anything starts. Email, WhatsApp or the form."),
-   "ar": ("تواصل مع شُورى جورج — تطوير أعمال، القاهرة، مصر",
+   "ar": ("تواصل مع شوره جورج — تطوير أعمال، القاهرة، مصر",
           "اوصف ما يعمل عليه نشاطك. مكالمة قصيرة، ثم نطاق عمل مكتوب بالتكلفة قبل أن يبدأ أي شيء. بالبريد أو واتساب أو عبر النموذج.")},
 }
 
@@ -268,7 +268,7 @@ def main():
     person = {
         "@context": "https://schema.org", "@type": "Person",
         "@id": SITE + "/#person", "name": "Shoura George",
-        "alternateName": "شُورى جورج",
+        "alternateName": "شوره جورج",
         "url": SITE, "email": CONTACT, "telephone": PHONE,
         "image": SITE + "/assets/img/ph-about.jpg",
         "jobTitle": "Business Development & Project Manager",
@@ -342,7 +342,7 @@ def main():
 <link rel="apple-touch-icon" href="{aroot}assets/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{aroot}assets/app.css">
 {ld}
 </head>
@@ -393,7 +393,7 @@ def main():
     <div class="social">{social_row(lang)}</div></div>
   </div>
   <div class="foot-bot">
-    <span>© 2026 {'شُورى جورج' if rtl else 'Shoura George'} · shoura.co</span>
+    <span>© 2026 {'شوره جورج' if rtl else 'Shoura George'} · shoura.co</span>
     <span>{'القاهرة، مصر' if rtl else 'Cairo, Egypt'}</span>
   </div>
 </div>
@@ -540,7 +540,7 @@ def main():
 </div></div>'''
             write(os.path.join(DIST, prefix, "insights", p["slug"] + ".html"),
                   shell(lang, lroot, aroot,
-                        esc(t["title"] + (" — شُورى جورج" if lang == "ar" else " — Shoura George")),
+                        esc(t["title"] + (" — شوره جورج" if lang == "ar" else " — Shoura George")),
                         esc(t["excerpt"]),
                         canon, alt_abs, alt_local, body, jsonld=ld,
                         og_type="article", page_key="insights"))
