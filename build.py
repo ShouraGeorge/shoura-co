@@ -565,8 +565,16 @@ def main():
           f"Sitemap: {SITE}/sitemap.xml\n")
 
     write(os.path.join(DIST, "llms.txt"), llms_txt(POSTS, PRODUCTS))
+    # Images never change under a given name (product photos carry a time
+    # stamp), so they are safe to pin for a year. The stylesheet and the
+    # scripts DO change under the same name, so they must revalidate —
+    # pinning those means a returning visitor keeps the old design forever.
     write(os.path.join(DIST, "_headers"),
-          "/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n"
+          "/assets/img/*\n  Cache-Control: public, max-age=31536000, immutable\n"
+          "/assets/covers/*\n  Cache-Control: public, max-age=31536000, immutable\n"
+          "/assets/products/*\n  Cache-Control: public, max-age=31536000, immutable\n"
+          "/assets/*.css\n  Cache-Control: public, max-age=0, must-revalidate\n"
+          "/assets/*.js\n  Cache-Control: public, max-age=0, must-revalidate\n"
           "/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n")
     print(f"built {len(urls)} pages -> {DIST}/")
 
