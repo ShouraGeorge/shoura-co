@@ -71,7 +71,7 @@ META = {
  "home": {
    "en": ("Shoura George — Business Development, Connected to Real Execution",
           "Business development, market research, branding, digital systems and project leadership for companies in Egypt and the Gulf. Strategy that gets delivered."),
-   "ar": ("شوره جورج — تطوير أعمال موصول بتنفيذ حقيقي",
+   "ar": ("شوره جورج — تطوير أعمال يصل إلى التنفيذ",
           "تطوير أعمال وأبحاث سوق وعلامات تجارية وأنظمة رقمية وقيادة مشروعات وحلول NFC للشركات في مصر والخليج. استراتيجية تصل إلى التنفيذ.")},
  "about": {
    "en": ("About Shoura George — Business Development Professional in Cairo",
