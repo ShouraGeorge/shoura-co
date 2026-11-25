@@ -8,7 +8,7 @@ hreflang alternates, Open Graph tags and JSON-LD.
 
     python3 build.py            -> writes ./dist
 """
-import json, os, re, shutil, datetime
+import json, os, re, shutil, datetime, hashlib
 from bs4 import BeautifulSoup
 
 SRC   = "src/template.html"
@@ -268,8 +268,26 @@ def main():
         shutil.rmtree(DIST)
     os.makedirs(DIST)
     shutil.copytree("src/assets", os.path.join(DIST, "assets"))
+
+    # Content-hash the three assets that change under a fixed name. Without this
+    # a returning visitor keeps whatever app.css their browser cached — the
+    # Cache-Control fix only helps responses served after it, and anyone who
+    # visited earlier is pinned for a year. A new filename sidesteps all of it.
+    ASSETS = {}
+    for name in ("app.css", "app.js", "content.js"):
+        path = os.path.join(DIST, "assets", name)
+        with open(path, "rb") as fh:
+            digest = hashlib.sha256(fh.read()).hexdigest()[:10]
+        stem, ext = os.path.splitext(name)
+        hashed = f"{stem}.{digest}{ext}"
+        os.rename(path, os.path.join(DIST, "assets", hashed))
+        ASSETS[name] = hashed
+    print("  assets: " + ", ".join(ASSETS.values()))
     if os.path.exists("src/studio.html"):
-        shutil.copy("src/studio.html", os.path.join(DIST, "studio.html"))
+        studio = open("src/studio.html", encoding="utf-8").read()
+        studio = studio.replace("assets/content.js", "assets/" + ASSETS["content.js"])
+        with open(os.path.join(DIST, "studio.html"), "w", encoding="utf-8") as fh:
+            fh.write(studio)
     urls = []
 
     person = {
@@ -310,6 +328,8 @@ def main():
     def shell(lang, lroot, aroot, title, desc, canon, alt_abs, alt_local, body,
               jsonld=None, og_type="website", page_key=""):
         rtl = lang == "ar"
+        CSS_FILE, APP_FILE, CONTENT_FILE = (
+            ASSETS["app.css"], ASSETS["app.js"], ASSETS["content.js"])
         nav = "".join(
             '<a href="{}"{}>{}</a>'.format(
                 lroot + p, ' class="on"' if k == page_key else "",
@@ -350,7 +370,7 @@ def main():
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=Montserrat:wght@200;300;400&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{aroot}assets/app.css">
+<link rel="stylesheet" href="{aroot}assets/{CSS_FILE}">
 {ld}
 </head>
 <body data-lang="{lang}" data-root="{aroot}">
@@ -375,8 +395,8 @@ def main():
 <main>{body}</main>
 {footer(lang, lroot, aroot)}
 {drawer_modal(lang)}
-<script src="{aroot}assets/content.js"></script>
-<script src="{aroot}assets/app.js"></script>
+<script src="{aroot}assets/{CONTENT_FILE}"></script>
+<script src="{aroot}assets/{APP_FILE}"></script>
 </body>
 </html>'''
 
@@ -572,17 +592,15 @@ def main():
           f"Sitemap: {SITE}/sitemap.xml\n")
 
     write(os.path.join(DIST, "llms.txt"), llms_txt(POSTS, PRODUCTS))
-    # Images never change under a given name (product photos carry a time
-    # stamp), so they are safe to pin for a year. The stylesheet and the
-    # scripts DO change under the same name, so they must revalidate —
-    # pinning those means a returning visitor keeps the old design forever.
+    # Every asset under /assets/ is now safe to pin: the stylesheet and the
+    # scripts carry a content hash in their filename, so a change produces a
+    # new name rather than a stale cache, and images never change under a
+    # given name. Pages themselves are not pinned — they must pick up the new
+    # asset names on the next visit.
     write(os.path.join(DIST, "_headers"),
-          "/assets/img/*\n  Cache-Control: public, max-age=31536000, immutable\n"
-          "/assets/covers/*\n  Cache-Control: public, max-age=31536000, immutable\n"
-          "/assets/products/*\n  Cache-Control: public, max-age=31536000, immutable\n"
-          "/assets/*.css\n  Cache-Control: public, max-age=0, must-revalidate\n"
-          "/assets/*.js\n  Cache-Control: public, max-age=0, must-revalidate\n"
-          "/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n")
+          "/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n"
+          "/*\n  Cache-Control: public, max-age=0, must-revalidate\n"
+          "  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n")
     print(f"built {len(urls)} pages -> {DIST}/")
 
 
