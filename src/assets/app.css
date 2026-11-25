@@ -82,11 +82,15 @@ header.solid{background:rgba(14,42,41,.97);border-bottom-color:var(--line-d)}
 /* SHOURA wordmark — set as live text in Montserrat, the brand guide's face,
    so it stays sharp at any size and takes the site's own colours. The gold
    rule of the guide reads as the site's brass here. */
-.brand{display:flex;flex-direction:column;align-items:flex-start;gap:5px;padding:11px 0}
+.brand{display:flex;flex-direction:column;align-items:center;gap:4px;padding:11px 0}
 .wm{font-family:'Montserrat',var(--sans);font-weight:300;font-size:1.06rem;
   letter-spacing:.34em;text-indent:.34em;line-height:1;color:var(--ivory);
   white-space:nowrap;transition:color .25s}
-.wm-rule{display:block;height:2px;width:100%;background:var(--brass);border-radius:2px;
+/* The rule is a short centred dash, not an underline: measured off the
+   original mark it runs 24% of the wordmark's width, centred on it, with a
+   generous gap above. A full-width rule would also read as the nav's own
+   active-page underline, which is the same brass. */
+.wm-rule{display:block;height:2px;width:24%;background:var(--brass);border-radius:2px;
   transition:background .25s,opacity .25s}
 .brand:hover .wm{color:#fff}
 .brand:hover .wm-rule{opacity:.75}

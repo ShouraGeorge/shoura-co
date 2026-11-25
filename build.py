@@ -308,7 +308,7 @@ def main():
         "@context": "https://schema.org", "@type": "ProfessionalService",
         "@id": SITE + "/#business", "name": "Shoura George — Business Development",
         "url": SITE, "email": CONTACT, "telephone": PHONE,
-        "image": SITE + "/assets/img/og-cover.png",
+        "image": SITE + "/assets/img/og-cover.jpg",
         "address": {"@type": "PostalAddress", "addressLocality": "Cairo", "addressCountry": "EG"},
         "areaServed": [{"@type": "Country", "name": "Egypt"},
                        {"@type": "Country", "name": "United Arab Emirates"},
@@ -357,13 +357,13 @@ def main():
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
 <meta property="og:url" content="{canon}">
-<meta property="og:image" content="{SITE}/assets/img/og-cover.png">
+<meta property="og:image" content="{SITE}/assets/img/og-cover.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{title}">
 <meta name="twitter:description" content="{desc}">
-<meta name="twitter:image" content="{SITE}/assets/img/og-cover.png">
+<meta name="twitter:image" content="{SITE}/assets/img/og-cover.jpg">
 <meta name="theme-color" content="#0E2A29">
 <link rel="icon" href="{aroot}assets/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{aroot}assets/img/apple-touch-icon.png">
