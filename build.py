@@ -111,6 +111,7 @@ META = {
 }
 
 NAV = [
+    ("home",     "index.html",          "Home",          "الرئيسية"),
     ("about",    "about.html",          "About",         "نبذة"),
     ("services", "services.html",       "Services",      "الخدمات"),
     ("nfc",      "nfc-solutions.html",  "NFC Solutions", "حلول NFC"),
@@ -348,7 +349,7 @@ def main():
 <link rel="apple-touch-icon" href="{aroot}assets/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=Montserrat:wght@200;300;400&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{aroot}assets/app.css">
 {ld}
 </head>
@@ -356,7 +357,7 @@ def main():
 <div id="progress"></div>
 <header>
 <div class="wrap nav">
-  <a class="brand" href="{lroot}index.html"><img src="{aroot}assets/img/wordmark.png" alt="Shoura George" width="150" height="28"></a>
+  <a class="brand" href="{lroot}index.html" aria-label="SHOURA"><span class="wm">SHOURA</span><span class="wm-rule" aria-hidden="true"></span></a>
   <nav class="nav-links" id="navLinks">{nav}</nav>
   <div class="nav-tools">
     <a class="lang" href="{alt_local}" hreflang="{'en' if rtl else 'ar'}">{'EN' if rtl else 'عربي'}</a>

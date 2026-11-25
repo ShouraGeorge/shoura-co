@@ -79,9 +79,20 @@ header{position:fixed;top:0;inset-inline-start:0;width:100%;z-index:120;
   border-bottom:1px solid transparent;transition:background .35s var(--e),border-color .35s}
 header.solid{background:rgba(14,42,41,.97);border-bottom-color:var(--line-d)}
 .nav{display:flex;align-items:center;height:var(--nav-h);gap:26px}
-.brand{display:flex;align-items:center;padding:9px 0}
-.brand img{height:28px;width:auto;transition:opacity .25s}
-.brand:hover img{opacity:.78}
+/* SHOURA wordmark — set as live text in Montserrat, the brand guide's face,
+   so it stays sharp at any size and takes the site's own colours. The gold
+   rule of the guide reads as the site's brass here. */
+.brand{display:flex;flex-direction:column;align-items:flex-start;gap:5px;padding:11px 0}
+.wm{font-family:'Montserrat',var(--sans);font-weight:300;font-size:1.06rem;
+  letter-spacing:.34em;text-indent:.34em;line-height:1;color:var(--ivory);
+  white-space:nowrap;transition:color .25s}
+.wm-rule{display:block;height:2px;width:100%;background:var(--brass);border-radius:2px;
+  transition:background .25s,opacity .25s}
+.brand:hover .wm{color:#fff}
+.brand:hover .wm-rule{opacity:.75}
+.wm-card{display:block;font-size:.92rem;color:var(--ivory)}
+html[dir="rtl"] .wm,html[dir="rtl"] .wm-card{direction:ltr;unicode-bidi:isolate}
+@media(max-width:560px){.wm{font-size:.92rem;letter-spacing:.28em;text-indent:.28em}}
 .nav-links{display:flex;gap:26px;margin-inline-start:auto;align-items:center}
 .nav-links a{font-size:.82rem;letter-spacing:.035em;color:rgba(244,241,233,.7);
   position:relative;padding:6px 0;transition:color .22s;white-space:nowrap}
