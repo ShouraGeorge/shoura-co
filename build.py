@@ -13,7 +13,13 @@ from bs4 import BeautifulSoup
 
 SRC   = "src/template.html"
 DIST  = "dist"
-SITE  = "https://shoura.co"
+# The canonical host. shoura.co itself does not answer: the apex is served by
+# Namecheap's URL-redirect box, which has no certificate, so https://shoura.co
+# fails outright. Pointing canonicals, hreflang, the sitemap and the structured
+# data at a host that does not load would tell Google to index nothing. Move the
+# nameservers to Cloudflare and the apex can serve the site directly; then this
+# goes back to https://shoura.co and one deploy carries the change everywhere.
+SITE  = "https://www.shoura.co"
 TODAY = datetime.date.today().isoformat()
 
 CONTACT  = "info@shoura.co"
