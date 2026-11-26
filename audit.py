@@ -16,7 +16,8 @@ for dp, _, fs in os.walk(DIST):
     for f in fs:
         if f.endswith(".html"):
             rel = os.path.relpath(os.path.join(dp, f), DIST).replace(os.sep, "/")
-            if rel == "studio.html":      # internal editor, noindex, not a site page
+            # internal editors: noindex, behind a sign-in, not site pages
+            if rel == "studio.html" or rel.startswith("admin/"):
                 continue
             pages.append(rel)
 pages.sort()

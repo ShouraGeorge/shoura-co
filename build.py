@@ -288,6 +288,14 @@ def main():
         studio = studio.replace("assets/content.js", "assets/" + ASSETS["content.js"])
         with open(os.path.join(DIST, "studio.html"), "w", encoding="utf-8") as fh:
             fh.write(studio)
+
+    # The admin is the same editor wired to the repository: it signs in with
+    # GitHub and commits, so an edit publishes itself. It lives at /admin/ so
+    # the Pages Functions under /api sit beside it.
+    if os.path.exists("src/admin.html"):
+        os.makedirs(os.path.join(DIST, "admin"), exist_ok=True)
+        with open(os.path.join(DIST, "admin", "index.html"), "w", encoding="utf-8") as fh:
+            fh.write(open("src/admin.html", encoding="utf-8").read())
     urls = []
 
     person = {
@@ -583,7 +591,7 @@ def main():
     write(os.path.join(DIST, "sitemap.xml"), "\n".join(sm))
 
     write(os.path.join(DIST, "robots.txt"),
-          "User-agent: *\nAllow: /\nDisallow: /studio.html\n\n"
+          "User-agent: *\nAllow: /\nDisallow: /studio.html\nDisallow: /admin/\nDisallow: /api/\n\n"
           "# AI answer engines are welcome to read and cite this site\n"
           "User-agent: GPTBot\nAllow: /\n"
           "User-agent: ClaudeBot\nAllow: /\n"
