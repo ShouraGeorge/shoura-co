@@ -546,11 +546,12 @@ function validate(){
     if(!p.ar.body.length||!p.en.body.length) e.push(`مقال «${p.ar.title||p.slug}»: المتن فاضي بإحدى اللغتين`); });
   return e;
 }
-function serialize(){
+function stampNow(){ return new Date().toISOString().slice(0,19).replace('T',' '); }
+function serialize(stamp){
   const j=o=>JSON.stringify(o,null,2);
   return `/* =======================================================================
    shoura.co — content file
-   صُدِّر من استوديو المحتوى في ${new Date().toISOString().slice(0,16).replace('T',' ')}
+   صُدِّر من استوديو المحتوى في ${stamp || stampNow()}
    المنتجات والمقالات. عدّل من الاستوديو، مش من هنا، عشان ما يحصلش أخطاء.
    ======================================================================= */
 
@@ -602,6 +603,55 @@ async function doExport(){
     navigator.clipboard.writeText(code).then(()=>b.textContent='اتنسخ ✓',()=>b.textContent='النسخ مش شغال هنا'); };
   dirty=false; setStatus('آخر تصدير: <b>'+new Date().toLocaleTimeString('ar-EG')+'</b>');
 }
+// The API answers in English because it talks to GitHub. He shouldn't have to
+// read that. An expired session is the common case and gets its own screen,
+// because "not signed in" in an Arabic panel reads as "publishing is broken".
+const API_AR={
+  'not signed in':'الجلسة انتهت — محتاج تسجّل دخول تاني.',
+  'not allowed':'الحساب ده مش مسموح له يعدّل الموقع.',
+  'nothing to save':'مفيش تعديلات تتنشر.',
+  'bad request':'الطلب وصل ناقص. جرّب تاني.',
+  'bad file entry':'فيه ملف صورة مش مقروء. امسحه وارفعه تاني.'
+};
+function arErr(msg){
+  const m=String(msg||'');
+  if(API_AR[m]) return API_AR[m];
+  if(/too many files/.test(m)) return 'الصور كتير في مرة واحدة. انشر على مرتين.';
+  if(/too (big|large)|size/i.test(m)) return 'حجم الصور كبير. صغّرها أو انشر على مرتين.';
+  if(/not a permitted path|path/i.test(m)) return 'فيه ملف مش مسموح يتغيّر من اللوحة.';
+  return m;
+}
+function expiredCard(){
+  $('#ovCard').innerHTML=`<h3>الجلسة انتهت</h3>
+    <p>لازم تسجّل دخول بـGitHub تاني قبل النشر. <b>شغلك محفوظ</b> ومش هيضيع —
+       بعد الدخول هتلاقي كل حاجة زي ما سيبتها، واضغط «نشر على الموقع» تاني.</p>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <a class="btn btn-brass" href="/api/login">الدخول بـGitHub</a>
+      <button class="btn btn-out" onclick="document.getElementById('ov').classList.remove('on')">بعدين</button>
+    </div>`;
+  $('#ov').classList.add('on');
+}
+// Watches the live site until the file he just published is the one being
+// served, so "it published" is something he sees rather than something he's
+// told. Reads the hashed content file named by the live page, not a guess.
+async function waitForLive(stamp, onTick){
+  const deadline=Date.now()+300000;
+  let tries=0;
+  while(Date.now()<deadline){
+    tries++;
+    if(onTick) onTick(tries);
+    await new Promise(r=>setTimeout(r, tries===1?15000:10000));
+    try{
+      const html=await (await fetch('/index.html?v='+Date.now(),{cache:'no-store'})).text();
+      const m=html.match(/assets\/content\.[a-f0-9]+\.js/);
+      if(m){
+        const js=await (await fetch('/'+m[0]+'?v='+Date.now(),{cache:'no-store'})).text();
+        if(js.indexOf(stamp)>-1) return true;
+      }
+    }catch(e){ /* mid-deploy the edge can blink; keep waiting */ }
+  }
+  return false;
+}
 async function doPublish(){
   const errs=validate();
   if(errs.length){
@@ -612,8 +662,16 @@ async function doPublish(){
   const btns=[$('#btnPublish'),$('#btnPublish2')].filter(Boolean);
   btns.forEach(b=>{ b.disabled=true; b.textContent='جارٍ النشر…'; });
 
+  // Check the session before spending his upload. A dead cookie here would
+  // otherwise surface as a failure after everything was encoded and sent.
   try{
-    const enc=new TextEncoder().encode(serialize());
+    const me=await (await fetch('/api/me',{cache:'no-store'})).json();
+    if(!me.signedIn){ expiredCard(); return; }
+  }catch(e){ /* offline check is not worth blocking on; the save will tell us */ }
+
+  const stamp=stampNow();
+  try{
+    const enc=new TextEncoder().encode(serialize(stamp));
     let bin=''; enc.forEach(b=>bin+=String.fromCharCode(b));
     const files=[{path:'src/assets/content.js', content_base64:btoa(bin)}];
 
@@ -632,17 +690,32 @@ async function doPublish(){
 
     dirty=false; localStorage.removeItem(LS);
     setStatus('آخر نشر: <b>'+new Date().toLocaleTimeString('ar-EG')+'</b>');
-    $('#ovCard').innerHTML=`<h3>اتنشر ✓</h3>
-      <p>اتحفظ <b>${r.files}</b> ملف في المستودع (<code>${r.commit}</code>).</p>
-      <p>الموقع بيتبني دلوقتي. خلال دقيقتين تقريبًا التعديل يبقى لايف.</p>
-      <div class="warn" style="margin:14px 0">لو الفحص التلقائي لقى خطأ، النشر بيقف والموقع الحالي يفضل زي ما هو. تقدر تتابع من صفحة Deployments في Cloudflare.</div>
+
+    // Stage one: it's in the repo. Say so, then watch the site itself.
+    const bust='?v='+Date.now();
+    $('#ovCard').innerHTML=`<h3>اتحفظ ✓ — بيتبني دلوقتي</h3>
+      <p>اتحفظ <b>${r.files}</b> ملف في المستودع (<code>${esc(String(r.commit))}</code>).</p>
+      <p id="liveWait" style="color:var(--muted)">بأتابع الموقع لحد ما التعديل يظهر عليه فعلاً… <b id="liveDots">·</b></p>
       <div style="display:flex;gap:8px">
-        <a class="btn btn-dark" href="https://www.shoura.co/" target="_blank" rel="noopener">فتح الموقع</a>
         <button class="btn btn-out" onclick="document.getElementById('ov').classList.remove('on')">إغلاق</button>
       </div>`;
     $('#ov').classList.add('on');
+
+    const ok=await waitForLive(stamp, n=>{ const d=$('#liveDots'); if(d) d.textContent='·'.repeat(Math.min(n,8)); });
+    const w=$('#liveWait');
+    if(ok && w){
+      w.outerHTML='<p style="color:#2f6f4f"><b>التعديل بقى لايف على الموقع ✓</b> — اتأكدت من الموقع نفسه، مش من الحفظ بس.</p>'+
+        '<div style="display:flex;gap:8px;margin-top:10px"><a class="btn btn-dark" href="https://www.shoura.co/marketplace.html'+bust+'" target="_blank" rel="noopener">شوف الموقع</a></div>';
+    } else if(w){
+      w.outerHTML='<div class="warn">اتحفظ في المستودع، بس لحد دلوقتي التعديل لسه مش ظاهر على الموقع. '+
+        'يعني إما البناء لسه شغال، أو الفحص التلقائي وقف النشر — والموقع الحالي يفضل سليم زي ما هو في الحالتين. '+
+        'استنى شوية وافتح الموقع، ولو فضل زي ما هو قولّي.</div>'+
+        '<div style="display:flex;gap:8px;margin-top:10px"><a class="btn btn-dark" href="https://www.shoura.co/marketplace.html'+bust+'" target="_blank" rel="noopener">شوف الموقع</a></div>';
+    }
   }catch(e){
-    $('#ovCard').innerHTML='<h3>النشر مانجحش</h3><p>'+esc(String(e.message||e))+'</p>'+
+    const msg=arErr(e && e.message || e);
+    if(/الجلسة انتهت/.test(msg)){ expiredCard(); return; }
+    $('#ovCard').innerHTML='<h3>النشر مانجحش</h3><p>'+esc(msg)+'</p>'+
       '<p style="color:var(--muted);font-size:.88rem">شغلك محفوظ هنا زي ما هو. جرّب تاني، ولو فضلت المشكلة نزّل نسخة من «تنزيل نسخة».</p>'+
       '<button class="btn btn-out" onclick="document.getElementById(\'ov\').classList.remove(\'on\')">تمام</button>';
     $('#ov').classList.add('on');

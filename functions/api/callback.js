@@ -1,5 +1,10 @@
 import { cookieHeader, whoami } from "./_lib.js";
 
+// A month, not eight hours. This is his own site on his own machine, and a
+// session that dies overnight means the next edit fails for a reason that
+// looks like the publishing itself is broken.
+const SESSION_DAYS = 30;
+
 // GitHub sends the browser back here with a short-lived code. The code is
 // swapped for an access token using the client secret, which lives in the
 // Cloudflare environment and never reaches the browser.
@@ -38,7 +43,7 @@ export async function onRequestGet({ request, env }) {
   }
 
   const headers = new Headers({ Location: "/admin/" });
-  headers.append("Set-Cookie", cookieHeader(data.access_token, 60 * 60 * 8));
+  headers.append("Set-Cookie", cookieHeader(data.access_token, SESSION_DAYS * 24 * 60 * 60));
   headers.append("Set-Cookie", "shoura_state=; Path=/api; HttpOnly; Secure; SameSite=Lax; Max-Age=0");
   return new Response(null, { status: 302, headers });
 }
