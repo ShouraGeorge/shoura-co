@@ -581,6 +581,36 @@ def main():
                         og_type="article", page_key="insights"))
             urls.append((canon, "yearly", "0.7"))
 
+    # ------------------------------------------------ 404
+    # Without this, Pages answers an unknown path with the home page, so a
+    # mistyped link looks like the site and Google records a soft 404.
+    body404 = ('<div class="wrap" style="padding:120px 0;text-align:center">'
+               '<p class="eyebrow">404</p>'
+               '<h1 style="margin:.2em 0">Page not found</h1>'
+               '<p style="color:var(--muted);max-width:50ch;margin:0 auto 26px">'
+               'This link does not exist on the site — it may have moved, '
+               'or a character may be missing from the address.</p>'
+               '<p><a class="btn btn-brass" href="/index.html">Home</a> '
+               '<a class="btn btn-out" href="/marketplace.html">Marketplace</a></p>'
+               '<hr style="margin:44px auto;max-width:280px;border:0;'
+               'border-top:1px solid rgba(0,0,0,.12)">'
+               '<div dir="rtl" lang="ar" style="color:var(--muted)">'
+               '<p>اللينك ده مش موجود على الموقع — يمكن اتغيّر أو فيه حرف ناقص.</p>'
+               '<p><a href="/ar/index.html">الرئيسية</a> · '
+               '<a href="/ar/marketplace.html">المتجر</a></p></div>'
+               '</div>')
+    html404 = shell("en", "/", "/",  # absolute roots: a 404 is served at any depth
+                    "Page not found — Shoura George",
+                    "This link does not exist on shoura.co. Go to the home page or the marketplace.",
+                    SITE + "/404.html", SITE + "/404.html", "/404.html",
+                    body404, page_key="home")
+    html404, n = re.subn(r'<meta name="robots" content="[^"]*">',
+                         '<meta name="robots" content="noindex, follow">', html404, count=1)
+    if not n:
+        html404 = html404.replace(
+            "</title>", '</title>\n  <meta name="robots" content="noindex, follow">', 1)
+    write(os.path.join(DIST, "404.html"), html404)
+
     # ------------------------------------------------ sitemap / robots / llms
     sm = ['<?xml version="1.0" encoding="UTF-8"?>',
           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']

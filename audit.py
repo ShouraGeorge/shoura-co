@@ -106,7 +106,10 @@ for p in pages:
             add("ERR", p, "img without src"); continue
         if src.startswith("http"):
             add("WARN", p, f"remote image {src}"); continue
-        target = os.path.normpath(os.path.join(base_dir, src)).replace(os.sep, "/")
+        if src.startswith("/"):
+            target = os.path.normpath(src.lstrip("/")).replace(os.sep, "/")
+        else:
+            target = os.path.normpath(os.path.join(base_dir, src)).replace(os.sep, "/")
         if target not in all_files:
             add("ERR", p, f"missing image: {src} -> {target}")
         if img.get("alt") is None:
@@ -123,7 +126,13 @@ for p in pages:
             if href.startswith("http") and a.get("target") == "_blank" and "noopener" not in (a.get("rel") or []):
                 add("WARN", p, f"target=_blank without rel=noopener: {href}")
             continue
-        target = os.path.normpath(os.path.join(base_dir, href)).replace(os.sep, "/")
+        # A root-absolute href resolves from the site root, not the page's folder.
+        # 404.html needs these: it is served at whatever path was mistyped, so a
+        # relative link on it would point somewhere different every time.
+        if href.startswith("/"):
+            target = os.path.normpath(href.lstrip("/")).replace(os.sep, "/")
+        else:
+            target = os.path.normpath(os.path.join(base_dir, href)).replace(os.sep, "/")
         if target not in all_files:
             add("ERR", p, f"broken link: {href} -> {target}")
         if not a.get_text(strip=True) and not a.find("img") and not a.find("svg"):
@@ -200,7 +209,10 @@ for loc in locs:
     if pth not in all_files:
         add("ERR", "sitemap.xml", f"lists non-existent page: {loc}")
 sm_set = {url_to_path(l) if not url_to_path(l).endswith("/") else url_to_path(l)+"index.html" for l in locs}
+NOT_IN_SITEMAP = {"404.html"}   # noindex by design
 for p in pages:
+    if p in NOT_IN_SITEMAP:
+        continue
     if p not in sm_set:
         add("ERR", "sitemap.xml", f"page missing from sitemap: {p}")
 
